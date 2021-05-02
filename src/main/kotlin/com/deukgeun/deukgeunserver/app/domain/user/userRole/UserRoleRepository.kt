@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface UserRoleRepository : JpaRepository<UserRole, Long> {
-    fun findByUserSeqAndRoleName(userSeq: Long, roleName: String): UserRole?
+    fun findByUserSeqAndRoleName(userSeq: Long, roleName: RoleName): UserRole?
 }

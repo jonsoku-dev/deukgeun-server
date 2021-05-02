@@ -8,15 +8,12 @@ import javax.persistence.*
 
 @EntityListeners(AuditingEntityListener::class)
 @MappedSuperclass
-open class BaseEntity {
-
+abstract class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var seq: Long? = null
-
     @CreatedDate
     var createdAt: LocalDateTime? = LocalDateTime.now()
-
     @LastModifiedDate
-    var updatedAt: LocalDateTime? = null
+    var updatedAt: LocalDateTime? = LocalDateTime.now()
 }

@@ -12,6 +12,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.authentication.logout.LogoutFilter
+import org.springframework.security.web.csrf.CsrfFilter
+import org.springframework.web.filter.CharacterEncodingFilter
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled=true, securedEnabled = true)
@@ -37,6 +39,9 @@ class WebSecurityConfig(
     }
 
     override fun configure(http: HttpSecurity) {
+        val filter = CharacterEncodingFilter()
+        filter.encoding = "UTF-8"
+        filter.setForceEncoding(true)
 
         // Apply JWT
         http.apply(JwtTokenFilterConfigurer(jwtTokenProvider));

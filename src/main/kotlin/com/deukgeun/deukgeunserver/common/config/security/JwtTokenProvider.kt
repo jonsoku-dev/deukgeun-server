@@ -2,6 +2,9 @@ package com.deukgeun.deukgeunserver.common.config.security
 
 import com.deukgeun.deukgeunserver.app.domain.user.UserDetailsProvider
 import io.jsonwebtoken.*
+import io.jsonwebtoken.io.Decoders
+import io.jsonwebtoken.security.Keys
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
@@ -22,25 +25,29 @@ class JwtTokenProvider(
     lateinit var expireMinute: String
 
     companion object {
-        const val TOKEN_HEADER  = "Authorization"
+        val LOG = LoggerFactory.getLogger(JwtTokenProvider::class.java)
+        const val TOKEN_HEADER = "Authorization"
         const val TIME_ZONE_KST = "Asia/Seoul"
     }
 
     fun createAppToken(userId: String?): String {
-        val payloads: Claims  = Jwts.claims()
+        val payloads: Claims = Jwts.claims()
         val now = LocalDateTime.now().atZone(ZoneId.of(TIME_ZONE_KST))
 
-        val issuedDate  = Date.from(now.toInstant())
-        val expiredDate = Date.from(now.plusMinutes(expireMinute.toLong()).toInstant() )
+        val issuedDate = Date.from(now.toInstant())
+        val expiredDate = Date.from(now.plusMinutes(expireMinute.toLong()).toInstant())
 
         payloads["userId"] = userId
+
+        val keyBytes = Decoders.BASE64.decode(secretKey)
+        val key = Keys.hmacShaKeyFor(keyBytes)
 
         return Jwts.builder()
             .setClaims(payloads)
             .setSubject(userId)
             .setIssuedAt(issuedDate)
             .setExpiration(expiredDate)
-            .signWith(SignatureAlgorithm.HS256, secretKey.toByteArray())
+            .signWith(key, SignatureAlgorithm.HS256)
             .compact()
     }
 
@@ -52,19 +59,17 @@ class JwtTokenProvider(
     }
 
     fun validateToken(token: String?): Boolean {
-        Jwts.parser()
-            .setSigningKey(secretKey.toByteArray())
-            .parseClaimsJws(token)
-
-        return  true
+        Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token)
+        return true
     }
 
     private fun getUserId(token: String): String {
         return Jwts
-                .parser()
-                .setSigningKey(secretKey.toByteArray())
-                .parseClaimsJws(token)
-                .body
-                .subject
+            .parserBuilder()
+            .setSigningKey(secretKey)
+            .build()
+            .parseClaimsJws(token)
+            .body
+            .subject
     }
 }
