@@ -1,0 +1,24 @@
+version: "3.7"
+
+services:
+  database:
+    container_name: docker-mysql
+    image: mysql:5.7
+    volumes:
+      - ./my.cnf:/etc/mysql/conf.d/custom.cnf
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+      - 3308:3306
+    environment:
+      MYSQL_DATABASE: tamatutorial
+      MYSQL_USER: ricky
+      MYSQL_PASSWORD: 1234 # id: ricky / pw: 1234
+      MYSQL_ROOT_PASSWORD: 1234 # id: root / pw: 1234
+
+  redis:
+    container_name: docker-redis
+    image: redis:alpine
+    restart: always
+    ports:
+      - 6380:6379

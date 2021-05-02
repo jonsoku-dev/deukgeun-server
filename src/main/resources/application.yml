@@ -1,0 +1,36 @@
+spring:
+  redis:
+    host: 127.0.0.1
+    port: 6380
+  cache:
+    type: redis
+    redis:
+      time-to-live: 10000
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3308/tamatutorial
+    username: ricky
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        default_batch_fetch_size: 1000 # in query
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL5Dialect
+    open-in-view: false
+
+logging.level:
+  org.hibernate.SQL: debug
+
+security:
+  jwt:
+    token:
+      secretKey: PseudoSecret-Pseudosecret-Please-Use-Ur-Own-Key-PseudoSecret-Pseudosecret
+      expiration-time: 365
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  show-login-endpoint: true
