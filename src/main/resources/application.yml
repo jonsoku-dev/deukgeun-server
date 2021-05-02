@@ -34,3 +34,7 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
   show-login-endpoint: true
+
+oauth:
+  kakao:
+    client-id: 481c793762510daf7d8e29920dcc6ac1
