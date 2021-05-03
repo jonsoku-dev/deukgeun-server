@@ -85,7 +85,7 @@ class KakaoOAuth(
         val postParams = mutableListOf<NameValuePair>(
             BasicNameValuePair("grant_type", "authorization_code"),
             BasicNameValuePair("client_id", client_id),
-            BasicNameValuePair("redirect_uri", "http://localhost:8080/api/v1/user/kakaologin"),
+            BasicNameValuePair("redirect_uri", "http://localhost:8080/api/v1/user/kakao-code"),
             BasicNameValuePair("code", code)
         )
         println("postParams: ${postParams}")

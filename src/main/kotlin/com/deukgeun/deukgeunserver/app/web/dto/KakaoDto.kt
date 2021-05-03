@@ -1,11 +1,20 @@
 package com.deukgeun.deukgeunserver.app.web.dto
 
+import javax.validation.constraints.NotBlank
+import javax.validation.constraints.NotNull
+
 data class KakaoToken(
+    @field:NotBlank
     val token_type: String? = "",
+    @field:NotBlank
     val access_token: String? = "",
+    @field:NotNull
     val expires_in: Int? = 0,
+    @field:NotBlank
     val refresh_token: String? = "",
+    @field:NotNull
     val refresh_token_expires_in: Int? = 0,
+    @field:NotBlank
     val scope: String? = ""
 )
 

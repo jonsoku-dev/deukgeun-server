@@ -61,8 +61,8 @@ class WebSecurityConfig(
         // [4] entry point
         http.authorizeRequests()
             .antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-            .antMatchers("/api/v1/user/login").permitAll()
-            .antMatchers("/api/v1/user/register").permitAll()
+            .antMatchers("/api/v1/user/kakao-code").permitAll() // backend auth
+            .antMatchers("/api/v1/user/kakao-auth").permitAll() // frontend auth
             .anyRequest().authenticated()
             .and().exceptionHandling().accessDeniedHandler(CustomAccessDeniedHandler())
             .and().exceptionHandling().authenticationEntryPoint(CustomAuthenticationEntryPoint())
