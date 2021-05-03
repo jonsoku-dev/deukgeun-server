@@ -1,9 +1,7 @@
 package com.deukgeun.deukgeunserver.app.web.controller.user
 
-import com.deukgeun.deukgeunserver.app.domain.user.User
 import com.deukgeun.deukgeunserver.app.domain.user.UserService
 import com.deukgeun.deukgeunserver.app.web.dto.*
-import com.deukgeun.deukgeunserver.common.config.argument.resolver.auth.AuthUser
 import com.deukgeun.deukgeunserver.common.config.security.AppToken
 import com.deukgeun.deukgeunserver.common.exception.BizException
 import com.deukgeun.deukgeunserver.common.util.kakao.KakaoOAuth
@@ -25,22 +23,6 @@ class UserController(
         val LOG: Logger = Logger.getLogger(UserController::class.java.name)
     }
 
-    @PostMapping("/register")
-    fun register(
-        @RequestBody registerRequestDto: RegisterRequestDto
-    ): ResponseEntity<String> {
-        userService.register(registerRequestDto)
-        return ResponseEntity.ok().body("OK")
-    }
-
-    @PostMapping("/login")
-    fun login(
-        @RequestBody loginRequestDto: LoginRequestDto
-    ): ResponseEntity<LoginResponseDto> {
-        val token = userService.login(loginRequestDto)
-        return ResponseEntity.ok().body(LoginResponseDto(token))
-    }
-
     @GetMapping("/kakaologin")
     fun kakaoLogin(
         @RequestParam("code") code: String,
@@ -53,14 +35,9 @@ class UserController(
         return ResponseDto(data = userService.saveKakaoToken(kakaoToken))
     }
 
-    @GetMapping("/profile")
-    fun getMe(@AuthUser user: User): ResponseEntity<User> {
-        return ResponseEntity.ok().body(user)
-    }
-
-    @GetMapping("/profile2")
-    fun getMe2(@RequestBody test: String): ResponseEntity<String> {
-        return ResponseEntity.ok().body(test)
+    @PostMapping("/saveKakaoToken")
+    fun saveKakaoToken(@RequestBody token: KakaoToken): ResponseDto<AppToken> {
+        return ResponseDto(data = userService.saveKakaoToken(token))
     }
 }
 

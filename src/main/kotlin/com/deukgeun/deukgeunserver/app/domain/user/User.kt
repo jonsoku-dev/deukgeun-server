@@ -13,7 +13,6 @@ import javax.persistence.OneToMany
 @JsonIdentityInfo(property = "objId", generator = ObjectIdGenerators.StringIdGenerator::class)
 data class User(
     var userId: String? = "",
-    var password: String? = "",
     @Enumerated(EnumType.STRING)
     var userType: UserType? = UserType.COMMON,
     @OneToMany(mappedBy = "user")
