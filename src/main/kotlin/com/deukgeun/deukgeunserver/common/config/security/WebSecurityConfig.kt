@@ -2,6 +2,7 @@ package com.deukgeun.deukgeunserver.common.config.security
 
 import org.springframework.context.annotation.Bean
 import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.config.BeanIds
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.builders.WebSecurity
@@ -16,11 +17,11 @@ import org.springframework.security.web.csrf.CsrfFilter
 import org.springframework.web.filter.CharacterEncodingFilter
 
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled=true, securedEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 class WebSecurityConfig(
     private val jwtTokenProvider: JwtTokenProvider,
     private val filterChainExceptionHandler: FilterChainExceptionHandler,
-): WebSecurityConfigurerAdapter() {
+) : WebSecurityConfigurerAdapter() {
 
 
     @Bean
@@ -28,14 +29,16 @@ class WebSecurityConfig(
         return BCryptPasswordEncoder(12)
     }
 
-    @Bean
+    @Bean(name = [BeanIds.AUTHENTICATION_MANAGER])
     override fun authenticationManager(): AuthenticationManager {
         return super.authenticationManager()
     }
 
     override fun configure(web: WebSecurity) {
         web.ignoring()
-           .antMatchers("/resources/**")
+            .antMatchers("/resources/**")
+            .antMatchers("/h2-console/**", "/favicon.ico", "/error")
+
     }
 
     override fun configure(http: HttpSecurity) {
@@ -57,9 +60,13 @@ class WebSecurityConfig(
 
         // [4] entry point
         http.authorizeRequests()
-                .anyRequest()
-                .permitAll()
-            .and()
-            .addFilterBefore(filterChainExceptionHandler, LogoutFilter::class.java)
+            .antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+            .antMatchers("/api/v1/user/login").permitAll()
+            .antMatchers("/api/v1/user/register").permitAll()
+            .anyRequest().authenticated()
+            .and().exceptionHandling().accessDeniedHandler(CustomAccessDeniedHandler())
+            .and().exceptionHandling().authenticationEntryPoint(CustomAuthenticationEntryPoint())
+
+        http.addFilterBefore(filterChainExceptionHandler, LogoutFilter::class.java)
     }
 }

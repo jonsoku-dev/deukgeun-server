@@ -28,7 +28,7 @@ security:
   jwt:
     token:
       secretKey: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
-      expiration-time: 365
+      expiration-time: 1
 
 springdoc:
   swagger-ui:

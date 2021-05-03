@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component
 
 @Component
 class FilterChainExceptionHandler : OncePerRequestFilter() {
-
     @Autowired
     @Qualifier("handlerExceptionResolver")
     lateinit var resolver: HandlerExceptionResolver
@@ -26,6 +25,7 @@ class FilterChainExceptionHandler : OncePerRequestFilter() {
         try {
             filterChain.doFilter(request, response)
         } catch (e: Exception) {
+
             resolver.resolveException(request, response, null, e)
         }
     }
